@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#irl — in real life</title>
+    
+    <!-- Typewriter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #FFF8E7;
+            font-family: 'Special Elite', 'Courier New', monospace;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 70vh;
+            padding: 40px 20px;
+        }
+
+        /* Spatial text positioning */
+        .word {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            color: #FFF8E7;
+            text-shadow: 
+                0 0 8px rgba(255, 248, 231, 0.6),
+                0 0 15px rgba(255, 248, 231, 0.3);
+            white-space: nowrap;
+        }
+
+        .word.show {
+            visibility: visible;
+            animation: fadeInWord 1.5s ease-in forwards, breathe 5s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes fadeInWord {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Different text sizes */
+        .size-xl {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+        }
+
+        .size-lg {
+            font-size: 2rem;
+            letter-spacing: 0.12em;
+        }
+
+        .size-md {
+            font-size: 1.4rem;
+            line-height: 1.8;
+        }
+
+        .size-sm {
+            font-size: 1rem;
+            font-style: italic;
+            color: rgba(255, 248, 231, 0.75);
+        }
+
+        .highlight {
+            color: #FFFFFF;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 1; }
+        }
+
+        /* Centered text (for form pages) */
+        .centered-content {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: 1.3rem;
+            line-height: 2;
+            color: #FFF8E7;
+            text-shadow: 
+                0 0 8px rgba(255, 248, 231, 0.6),
+                0 0 15px rgba(255, 248, 231, 0.3);
+            margin-bottom: 30px;
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        /* Form styling */
+        .form-container {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            color: rgba(255, 248, 231, 0.8);
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(255, 248, 231, 0.4);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: rgba(255, 248, 231, 0.05);
+            border: 1px solid rgba(255, 248, 231, 0.3);
+            border-radius: 2px;
+            padding: 12px;
+            font-size: 0.95rem;
+            color: #FFF8E7;
+            font-family: 'Special Elite', monospace;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: rgba(255, 248, 231, 0.7);
+            background: rgba(255, 248, 231, 0.08);
+            box-shadow: 0 0 15px rgba(255, 248, 231, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid rgba(255, 248, 231, 0.6);
+            color: #FFF8E7;
+            padding: 12px 40px;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            font-family: 'Special Elite', monospace;
+            width: 100%;
+        }
+
+        button:hover {
+            background: rgba(255, 248, 231, 0.1);
+            border-color: rgba(255, 248, 231, 0.9);
+            box-shadow: 
+                0 0 15px rgba(255, 248, 231, 0.5),
+                0 0 30px rgba(255, 248, 231, 0.3);
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: rgba(255, 248, 231, 0.4);
+            letter-spacing: 0.1em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        @media (max-width: 600px) {
+            .size-xl { font-size: 2rem; }
+            .size-lg { font-size: 1.5rem; }
+            .size-md { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: Title -->
+    <!-- EDIT: Main title positioning -->
+    <div class="page active" id="page-1">
+        <div class="content">
+            <span class="word size-xl" style="top: 45%; left: 50%; transform: translate(-50%, -50%);" data-delay="0">#irl</span>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Breathe -->
+    <!-- EDIT: Single word with sequential dots -->
+    <div class="page" id="page-2">
+        <div class="content">
+            <span class="word size-lg highlight" style="top: 40%; left: 30%;" data-delay="0">breathe</span>
+            <span class="word size-sm" style="top: 55%; left: 45%;" data-delay="1000">.</span>
+            <span class="word size-sm" style="top: 55%; left: 48%;" data-delay="1500">.</span>
+            <span class="word size-sm" style="top: 55%; left: 51%;" data-delay="2000">.</span>
+        </div>
+    </div>
+
+    <!-- PAGE 3: You are here -->
+    <!-- EDIT: Scattered positioning -->
+    <div class="page" id="page-3">
+        <div class="content">
+            <span class="word size-lg" style="top: 25%; left: 15%;" data-delay="0">you</span>
+            <span class="word size-lg" style="top: 40%; left: 45%;" data-delay="500">are</span>
+            <span class="word size-lg highlight" style="top: 55%; left: 65%;" data-delay="1000">here</span>
+        </div>
+    </div>
+
+    <!-- PAGE 4: Right now -->
+    <!-- EDIT: Vertical cascade -->
+    <div class="page" id="page-4">
+        <div class="content">
+            <span class="word size-md" style="top: 35%; left: 50%; transform: translateX(-50%);" data-delay="0">right</span>
+            <span class="word size-lg highlight" style="top: 50%; left: 50%; transform: translateX(-50%);" data-delay="800">now</span>
+        </div>
+    </div>
+
+    <!-- PAGE 5: In this moment -->
+    <!-- EDIT: Scattered with emphasis -->
+    <div class="page" id="page-5">
+        <div class="content">
+            <span class="word size-md" style="top: 35%; left: 25%;" data-delay="0">in</span>
+            <span class="word size-md" style="top: 45%; left: 40%;" data-delay="600">this</span>
+            <span class="word size-lg highlight" style="top: 55%; left: 60%;" data-delay="1200">moment</span>
+        </div>
+    </div>
+
+    <!-- PAGE 6: Breathe -->
+    <!-- EDIT: Simple statement with dots -->
+    <div class="page" id="page-6">
+        <div class="content">
+            <span class="word size-lg highlight" style="top: 40%; left: 35%;" data-delay="0">breathe</span>
+            <span class="word size-sm" style="top: 50%; left: 40%;" data-delay="800">.</span>
+            <span class="word size-sm" style="top: 50%; left: 43%;" data-delay="1200">.</span>
+            <span class="word size-sm" style="top: 50%; left: 46%;" data-delay="1600">.</span>
+        </div>
+    </div>
+
+    <!-- PAGE 7: Pause -->
+    <!-- EDIT: Sequential reveal with parentheses -->
+    <div class="page" id="page-7">
+        <div class="content">
+            <span class="word size-sm" style="top: 35%; left: 40%;" data-delay="0">(</span>
+            <span class="word size-md" style="top: 40%; left: 43%;" data-delay="500">pause</span>
+            <span class="word size-sm" style="top: 50%; left: 40%;" data-delay="1500">.</span>
+            <span class="word size-sm" style="top: 50%; left: 45%;" data-delay="2000">.</span>
+            <span class="word size-sm" style="top: 50%; left: 50%;" data-delay="2500">.</span>
+            <span class="word size-md" style="top: 60%; left: 35%;" data-delay="3500">notice</span>
+            <span class="word size-md" style="top: 60%; left: 52%;" data-delay="4000">where</span>
+            <span class="word size-md" style="top: 60%; left: 68%;" data-delay="4500">you</span>
+            <span class="word size-md" style="top: 68%; left: 50%; transform: translateX(-50%);" data-delay="5000">are</span>
+            <span class="word size-sm" style="top: 75%; left: 60%;" data-delay="5500">)</span>
+        </div>
+    </div>
+
+    <!-- PAGE 8: Center of experience -->
+    <!-- EDIT: Vertical emphasis -->
+    <div class="page" id="page-8">
+        <div class="content">
+            <span class="word size-md" style="top: 25%; left: 50%; transform: translateX(-50%);" data-delay="0">you</span>
+            <span class="word size-md" style="top: 33%; left: 50%; transform: translateX(-50%);" data-delay="500">are</span>
+            <span class="word size-md" style="top: 41%; left: 50%; transform: translateX(-50%);" data-delay="1000">at</span>
+            <span class="word size-md" style="top: 49%; left: 50%; transform: translateX(-50%);" data-delay="1500">the</span>
+            <span class="word size-lg highlight" style="top: 60%; left: 50%; transform: translateX(-50%);" data-delay="2000">center</span>
+        </div>
+    </div>
+
+    <!-- PAGE 9: Of your lifelong immersive experience -->
+    <!-- EDIT: Continuation -->
+    <div class="page" id="page-9">
+        <div class="content">
+            <span class="word size-md" style="top: 30%; left: 25%;" data-delay="0">of</span>
+            <span class="word size-md" style="top: 30%; left: 35%;" data-delay="400">your</span>
+            <span class="word size-lg" style="top: 45%; left: 50%; transform: translateX(-50%);" data-delay="900">lifelong</span>
+            <span class="word size-lg" style="top: 58%; left: 50%; transform: translateX(-50%);" data-delay="1500">immersive</span>
+            <span class="word size-lg highlight" style="top: 71%; left: 50%; transform: translateX(-50%);" data-delay="2100">experience</span>
+        </div>
+    </div>
+
+    <!-- PAGE 10: You always have been -->
+    <!-- EDIT: Affirmation -->
+    <div class="page" id="page-10">
+        <div class="content">
+            <span class="word size-md" style="top: 35%; left: 35%;" data-delay="0">you</span>
+            <span class="word size-md" style="top: 45%; left: 42%;" data-delay="600">always</span>
+            <span class="word size-md" style="top: 55%; left: 50%; transform: translateX(-50%);" data-delay="1200">have</span>
+            <span class="word size-md" style="top: 65%; left: 58%;" data-delay="1800">been</span>
+        </div>
+    </div>
+
+    <!-- PAGE 11: Gift -->
+    <!-- EDIT: Scattered gratitude -->
+    <div class="page" id="page-11">
+        <div class="content">
+            <span class="word size-md" style="top: 35%; left: 25%;" data-delay="0">what</span>
+            <span class="word size-md" style="top: 35%; left: 38%;" data-delay="400">a</span>
+            <span class="word size-lg highlight" style="top: 45%; left: 50%; transform: translateX(-50%);" data-delay="900">gift</span>
+            <span class="word size-md" style="top: 60%; left: 60%;" data-delay="1700">to</span>
+            <span class="word size-md" style="top: 60%; left: 70%;" data-delay="2100">remember</span>
+        </div>
+    </div>
+
+    <!-- PAGE 12: Not happening to you -->
+    <!-- EDIT: Reframe -->
+    <div class="page" id="page-12">
+        <div class="content">
+            <span class="word size-md" style="top: 30%; left: 20%;" data-delay="0">life</span>
+            <span class="word size-md" style="top: 30%; left: 35%;" data-delay="400">is</span>
+            <span class="word size-md" style="top: 30%; left: 45%;" data-delay="800">not</span>
+            <span class="word size-md" style="top: 40%; left: 30%;" data-delay="1300">something</span>
+            <span class="word size-md" style="top: 50%; left: 40%;" data-delay="1800">happening</span>
+            <span class="word size-md" style="top: 60%; left: 55%;" data-delay="2300"><em>to</em></span>
+            <span class="word size-md" style="top: 60%; left: 65%;" data-delay="2800">you</span>
+        </div>
+    </div>
+
+    <!-- PAGE 13: Happening through -->
+    <!-- EDIT: Empowerment -->
+    <div class="page" id="page-13">
+        <div class="content">
+            <span class="word size-md" style="top: 35%; left: 30%;" data-delay="0">it</span>
+            <span class="word size-md" style="top: 35%; left: 38%;" data-delay="400">is</span>
+            <span class="word size-md" style="top: 45%; left: 35%;" data-delay="900">something</span>
+            <span class="word size-md" style="top: 45%; left: 60%;" data-delay="1300">you</span>
+            <span class="word size-md" style="top: 45%; left: 70%;" data-delay="1700">are</span>
+            <span class="word size-lg highlight" style="top: 57%; left: 50%; transform: translateX(-50%);" data-delay="2200">happening</span>
+            <span class="word size-lg highlight" style="top: 67%; left: 50%; transform: translateX(-50%);" data-delay="2800"><em>through</em></span>
+        </div>
+    </div>
+
+    <!-- PAGE 14: About IRL -->
+    <!-- EDIT: Project intro -->
+    <div class="page" id="page-14">
+        <div class="content">
+            <span class="word size-lg highlight" style="top: 20%; left: 25%;" data-delay="0">#irl</span>
+            <span class="word size-md" style="top: 20%; left: 42%;" data-delay="500">is</span>
+            <span class="word size-md" style="top: 20%; left: 50%;" data-delay="900">a</span>
+            <span class="word size-md" style="top: 20%; left: 60%;" data-delay="1300">project</span>
+            <span class="word size-md" style="top: 32%; left: 20%;" data-delay="1900">about</span>
+            <span class="word size-md" style="top: 32%; left: 40%;" data-delay="2300">approaching</span>
+            <span class="word size-md" style="top: 32%; left: 72%;" data-delay="2700">life</span>
+            <span class="word size-md" style="top: 44%; left: 25%;" data-delay="3300">as</span>
+            <span class="word size-md" style="top: 44%; left: 35%;" data-delay="3700">if</span>
+            <span class="word size-md" style="top: 44%; left: 45%;" data-delay="4100">it</span>
+            <span class="word size-md" style="top: 44%; left: 55%;" data-delay="4500">were</span>
+            <span class="word size-md" style="top: 56%; left: 30%;" data-delay="5100">an</span>
+            <span class="word size-lg" style="top: 56%; left: 45%;" data-delay="5500">immersive</span>
+            <span class="word size-md" style="top: 68%; left: 30%;" data-delay="6100">experience</span>
+            <span class="word size-md" style="top: 68%; left: 60%;" data-delay="6500">designed</span>
+            <span class="word size-md" style="top: 78%; left: 35%;" data-delay="7100">just</span>
+            <span class="word size-md" style="top: 78%; left: 48%;" data-delay="7500">for</span>
+            <span class="word size-lg highlight" style="top: 78%; left: 60%;" data-delay="7900">you</span>
+        </div>
+    </div>
+
+    <!-- PAGE 15: What it's about -->
+    <!-- EDIT: Core themes -->
+    <div class="page" id="page-15">
+        <div class="content">
+            <span class="word size-md" style="top: 20%; left: 20%;" data-delay="0">it</span>
+            <span class="word size-md" style="top: 20%; left: 30%;" data-delay="300">is</span>
+            <span class="word size-md" style="top: 20%; left: 42%;" data-delay="600">about</span>
+            <span class="word size-lg highlight" style="top: 35%; left: 35%;" data-delay="1200">presence,</span>
+            <span class="word size-lg highlight" style="top: 50%; left: 50%; transform: translateX(-50%);" data-delay="1800">connection,</span>
+            <span class="word size-md" style="top: 65%; left: 25%;" data-delay="2400">and</span>
+            <span class="word size-md" style="top: 65%; left: 38%;" data-delay="2700">that</span>
+            <span class="word size-md" style="top: 65%; left: 52%;" data-delay="3000">you</span>
+            <span class="word size-md" style="top: 65%; left: 65%;" data-delay="3300">are</span>
+            <span class="word size-lg highlight" style="top: 77%; left: 50%; transform: translateX(-50%);" data-delay="3900">undeniably</span>
+            <span class="word size-lg highlight" style="top: 87%; left: 50%; transform: translateX(-50%);" data-delay="4500">worthy</span>
+        </div>
+    </div>
+
+    <!-- PAGE 16: Personal connection -->
+    <!-- EDIT: Author voice -->
+    <div class="page" id="page-16">
+        <div class="content">
+            <span class="word size-md" style="top: 22%; left: 25%;" data-delay="0">this</span>
+            <span class="word size-md" style="top: 22%; left: 38%;" data-delay="400">is</span>
+            <span class="word size-md" style="top: 22%; left: 48%;" data-delay="800">at</span>
+            <span class="word size-md" style="top: 22%; left: 58%;" data-delay="1200">the</span>
+            <span class="word size-lg highlight" style="top: 34%; left: 50%; transform: translateX(-50%);" data-delay="1700">core</span>
+            <span class="word size-md" style="top: 46%; left: 35%;" data-delay="2300">of</span>
+            <span class="word size-md" style="top: 46%; left: 47%;" data-delay="2700">what</span>
+            <span class="word size-md" style="top: 46%; left: 62%;" data-delay="3100">i</span>
+            <span class="word size-md" style="top: 56%; left: 30%;" data-delay="3700">talk</span>
+            <span class="word size-md" style="top: 56%; left: 48%;" data-delay="4100">about,</span>
+            <span class="word size-md" style="top: 66%; left: 35%;" data-delay="4700">create</span>
+            <span class="word size-md" style="top: 66%; left: 55%;" data-delay="5100">around,</span>
+            <span class="word size-md" style="top: 76%; left: 40%;" data-delay="5700">and</span>
+            <span class="word size-lg highlight" style="top: 76%; left: 52%;" data-delay="6100">live</span>
+            <span class="word size-md" style="top: 76%; left: 70%;" data-delay="6500">by</span>
+        </div>
+    </div>
+
+    <!-- PAGE 17: Invitation -->
+    <!-- EDIT: Connection invitation -->
+    <div class="page" id="page-17">
+        <div class="content">
+            <span class="word size-md" style="top: 38%; left: 30%;" data-delay="0">if</span>
+            <span class="word size-md" style="top: 38%; left: 40%;" data-delay="400">this</span>
+            <span class="word size-lg" style="top: 48%; left: 50%; transform: translateX(-50%);" data-delay="900">resonates,</span>
+            <span class="word size-md" style="top: 62%; left: 35%;" data-delay="1700">i</span>
+            <span class="word size-md" style="top: 62%; left: 42%;" data-delay="2000">would</span>
+            <span class="word size-md" style="top: 62%; left: 57%;" data-delay="2300">love</span>
+            <span class="word size-md" style="top: 62%; left: 70%;" data-delay="2600">to</span>
+            <span class="word size-lg highlight" style="top: 72%; left: 50%; transform: translateX(-50%);" data-delay="3100">know</span>
+        </div>
+    </div>
+
+    <!-- PAGE 18: Form -->
+    <div class="page" id="page-18">
+        <div class="centered-content">
+            <!-- EDIT: Form introduction -->
+            <p class="intro-text">
+                share a bit<br>
+                about yourself
+            </p>
+
+            <!-- 
+                IMPORTANT: Replace YOUR_FORMSPREE_ENDPOINT with your actual endpoint
+                Get it from formspree.io
+            -->
+            <form id="irl-form" action="https://formspree.io/f/mojvggob" method="POST" class="form-container">
+                
+                <div class="form-group">
+                    <!-- EDIT: Name label -->
+                    <label for="name">your name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <!-- EDIT: Email label -->
+                    <label for="email">email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <!-- EDIT: Phone label -->
+                    <label for="phone">phone (optional)</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <!-- EDIT: Interest label and options -->
+                    <label for="interest">how does this land for you?</label>
+                    <select id="interest" name="interest" required>
+                        <option value="">—</option>
+                        <option value="curious">curious, want to know more</option>
+                        <option value="resonates">this deeply resonates</option>
+                        <option value="collaborate">i want to collaborate / work together</option>
+                        <option value="just-vibing">just vibing, staying connected</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <!-- EDIT: Message label -->
+                    <label for="message">anything you want to share? (optional)</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+
+                <!-- EDIT: Submit button -->
+                <button type="submit">send</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAGE 19: Success part 1 -->
+    <div class="page" id="page-19">
+        <div class="content">
+            <!-- EDIT: Success message part 1 -->
+            <span class="word size-lg" style="top: 25%; left: 50%; transform: translateX(-50%);" data-delay="0">received</span>
+            <span class="word size-md" style="top: 38%; left: 50%; transform: translateX(-50%);" data-delay="800">thank</span>
+            <span class="word size-md" style="top: 45%; left: 50%; transform: translateX(-50%);" data-delay="1200">you</span>
+            <span class="word size-md" style="top: 58%; left: 28%;" data-delay="1900">when</span>
+            <span class="word size-md" style="top: 58%; left: 40%;" data-delay="2200">it</span>
+            <span class="word size-md" style="top: 58%; left: 50%;" data-delay="2500">is</span>
+            <span class="word size-md" style="top: 58%; left: 62%;" data-delay="2800">time,</span>
+            <span class="word size-md" style="top: 70%; left: 32%;" data-delay="3400">i</span>
+            <span class="word size-md" style="top: 70%; left: 40%;" data-delay="3700">will</span>
+            <span class="word size-md" style="top: 70%; left: 52%;" data-delay="4000">be</span>
+            <span class="word size-md" style="top: 70%; left: 62%;" data-delay="4300">in</span>
+            <span class="word size-md" style="top: 70%; left: 72%;" data-delay="4600">touch</span>
+        </div>
+    </div>
+
+    <!-- PAGE 20: Success part 2 -->
+    <div class="page" id="page-20">
+        <div class="content">
+            <!-- EDIT: Success message part 2 -->
+            <span class="word size-sm" style="top: 30%; left: 50%; transform: translateX(-50%);" data-delay="0">( for now . . .</span>
+            <span class="word size-sm" style="top: 38%; left: 50%; transform: translateX(-50%);" data-delay="800">breathe . . .</span>
+            <span class="word size-sm" style="top: 46%; left: 50%; transform: translateX(-50%);" data-delay="1600">be here…</span>
+            <span class="word size-md" style="top: 58%; left: 50%; transform: translateX(-50%);" data-delay="2600">and enjoy</span>
+            <span class="word size-md" style="top: 66%; left: 50%; transform: translateX(-50%);" data-delay="3200">your lifelong</span>
+            <span class="word size-md" style="top: 74%; left: 50%; transform: translateX(-50%);" data-delay="3800">immersive experience )</span>
+            <span class="word size-lg highlight" style="top: 88%; left: 50%; transform: translateX(-50%);" data-delay="4800">your story continues…</span>
+        </div>
+    </div>
+
+    <!-- Navigation hint -->
+    <div class="nav-hint" id="nav-hint">click or press → to continue</div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 20;
+        const form = document.getElementById('irl-form');
+        const navHint = document.getElementById('nav-hint');
+        let pageAnimationComplete = false;
+
+        function showPage(pageNumber) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show requested page
+            const page = document.getElementById(`page-${pageNumber}`);
+            if (page) {
+                page.classList.add('active');
+                currentPage = pageNumber;
+                pageAnimationComplete = false;
+
+                // Hide navigation hint on form and success pages
+                if (pageNumber === 18 || pageNumber === 19 || pageNumber === 20) {
+                    navHint.style.display = 'none';
+                } else {
+                    navHint.style.display = 'block';
+                }
+
+                // Animate words on this page
+                const words = page.querySelectorAll('.word');
+                let maxDelay = 0;
+                
+                words.forEach(word => {
+                    const delay = parseInt(word.getAttribute('data-delay')) || 0;
+                    if (delay > maxDelay) maxDelay = delay;
+                    
+                    setTimeout(() => {
+                        word.classList.add('show');
+                    }, delay);
+                });
+
+                // Mark animation as complete after longest delay + fade duration
+                setTimeout(() => {
+                    pageAnimationComplete = true;
+                }, maxDelay + 1500);
+            }
+        }
+
+        function nextPage() {
+            if (pageAnimationComplete && currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        }
+
+        // Click anywhere to advance (except on form page)
+        document.body.addEventListener('click', function(e) {
+            if (currentPage !== 18 && !e.target.closest('form') && pageAnimationComplete) {
+                nextPage();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (pageAnimationComplete) {
+                    nextPage();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousPage();
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            setTimeout(() => {
+                showPage(19);
+            }, 500);
+        });
+
+        // Initialize first page
+        showPage(1);
+    </script>
+</body>
+</html>
